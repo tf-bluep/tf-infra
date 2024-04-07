@@ -1,0 +1,19 @@
+version: 2
+registries:
+  terraform-cloud:
+    type: terraform-registry
+    url: https://app.terraform.io
+    token: ${{ secrets.TF_API_TOKEN }}
+updates:
+  - package-ecosystem: terraform
+    directory: "/"
+    registries:
+      - terraform-cloud
+    labels:
+      - "dependencies"
+      - "standard_change"
+    schedule:
+      interval: daily
+      time: "09:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 10
