@@ -9,7 +9,7 @@ terraform {
   cloud {
     organization = "rohityad"
     workspaces {
-      name = "tf-infra"
+      name = "alerts"
     }
   }
 }
