@@ -1,4 +1,4 @@
-name: 'Terraform Plan MAIN'
+name: 'Terraform Plan main'
 
 on:
   pull_request:
