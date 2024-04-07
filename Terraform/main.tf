@@ -6,4 +6,14 @@ terraform {
       version = "~> 3.0.2"
     }
   }
+  cloud {
+    organization = "rohityad"
+    workspaces {
+      name = "tf-infra"
+    }
+  }
+}
+
+provider "azurerm" {
+  features {}
 }
