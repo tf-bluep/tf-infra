@@ -1,50 +1,38 @@
-name: 'Terraform Apply main'
+name: "Terraform-Apply-Infra-Release"
 
 on:
   push:
-   branches:
-    - main
-
-permissions:
-  contents: read
-  pull-requests: write
-
-env:
-  TF_CLOUD_ORGANIZATION: "rohityad"
-  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-  TF_WORKSPACE: "tf-infra"
-  CONFIG_DIRECTORY: "terraform"
+    branches:
+      - main
 
 jobs:
   terraform:
-    if: github.repository != ${{ github.event.repository.name }}
-    name: "Terraform Apply"
+    name: "Terraform"
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Upload Configuration
-      uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
-      id: apply-upload
-      with:
-        workspace: ${{ env.TF_WORKSPACE }}
-        directory: ${{ env.CONFIG_DIRECTORY }}
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Create Apply Run
-      uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.0
-      id: apply-run
-      with:
-        workspace: ${{ env.TF_WORKSPACE }}
-        configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
+      - name: Terraform Init
+        id: init
+        run: terraform init
 
-    - name: Apply
-      uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.0.0
-      if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
-      id: apply
-      with:
-        run: ${{ steps.apply-run.outputs.run_id }}
-        comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'push'
+        run: terraform plan -no-color
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
