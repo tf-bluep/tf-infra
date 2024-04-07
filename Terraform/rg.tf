@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "demo" {
-  name     = "example-resources"
+  name     = "Bluepi-resources"
   location = "CentralIndia"
 }
 
 ##  Demo now
 resource "azurerm_storage_account" "StorageAccountDemo" {
-  name                     = "satestant000012"
+  name                     = "Bluepi"
   resource_group_name      = azurerm_resource_group.demo.name
   location                 = azurerm_resource_group.demo.location
   account_tier             = "Standard"
