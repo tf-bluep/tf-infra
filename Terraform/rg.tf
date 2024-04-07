@@ -1,13 +1,18 @@
+resource "azurerm_resource_group" "demo" {
+  name     = "example-resources"
+  location = "West Europe"
+}
 
-module "azure_resourcegroup" {
-  source  = "app.terraform.io/rohityad/azure_resourcegroup/azurerm"
-  version = "1.0.0"
+##  Demo now
+resource "azurerm_storage_account" "StorageAccountDemo" {
+  name                     = "satestant000012"
+  resource_group_name      = azurerm_resource_group.demo.name
+  location                 = azurerm_resource_group.demo.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
 
-  application = "Bluepi"
-  costcenter  = "abc"
-  department  = "xyz"
-  env         = "dev"
-  location    = data.azurerm_location.current.display_name
-  owner       = "rohityad"
-  rgname      = "RG-bluepi"
+  tags = {
+    video = "azure"
+    channel = "CloudQuickLabs"
+  }
 }
