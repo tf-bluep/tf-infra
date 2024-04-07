@@ -1,4 +1,4 @@
-data "azurerm_location" "current" {
+/*data "azurerm_location" "current" {
   location = "CentralIndia"
 }
 
@@ -31,4 +31,4 @@ variable "project" {
   description = "Project Name in small case"
   type        = string
 }
-
+*/
