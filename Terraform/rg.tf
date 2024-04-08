@@ -3,7 +3,7 @@ resource "azurerm_resource_group" "demo" {
   location = "CentralIndia"
 }
 
-##  Demo now
+#  Demo now
 resource "azurerm_storage_account" "StorageAccountDemo" {
   name                     = "bluepi"
   resource_group_name      = azurerm_resource_group.demo.name
